@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Barelink</string>
+    <string name="tile_label">Strip link</string>
+    <string name="process_text_label">Strip link</string>
+    <string name="overlay_needed">Allow display over other apps</string>
+    <string name="overlay_allowed">Display over other apps — allowed</string>
+    <string name="hard_on_help">Every “?” and everything after it is deleted. Shortest link. YouTube watch?v= links will break — turn this off if you share those.</string>
+    <string name="hard_off_help">Only known tracking tags are removed (utm, fbclid, eBay mkcid, and the like). YouTube video ids and search queries stay.</string>
+</resources>
