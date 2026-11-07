@@ -23,8 +23,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Cuts a shared or copied link at the question mark. The tracking junk goes. The short link stays."
+            android:text="Cuts a copied or shared link at the question mark. The tracking junk goes. The short link stays."
             android:textColor="@color/muted"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/watch_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/not_watching"
+            android:textColor="@color/fg"
             android:textSize="16sp" />
 
         <TextView
@@ -75,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Android only lets the keyboard, or the app on screen, read the clipboard. Barelink does not replace your keyboard. With the switch on, it flashes an invisible window for a split second, rewrites the link, and goes away."
+            android:text="Copy a link in any app. Barelink sees the clipboard change, takes the screen for a split second, and puts the short link back. Ordinary text is left alone, with no toast."
             android:textColor="@color/fg"
             android:textSize="16sp" />
 

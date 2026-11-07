@@ -24,7 +24,7 @@ Share a link from any app and pick **Barelink**. It copies the short link and op
 Select a link, tap the overflow on the selection toolbar, tap **Strip link**. The selected text is replaced with the short version.
 
 **Automatic, on every copy**  
-Turn on “Clean copied links automatically”. Android only lets the current keyboard, or the app that is on screen, read the clipboard. Barelink does not replace your keyboard. It uses a one-frame invisible window (that is the “display over other apps” permission), rewrites the link, and disappears. Also allow the quiet notification, and tell the phone not to sleep the app, or the watcher dies in the background.
+On by default. The first time you open the app it sends you to “display over other apps.” Allow it, allow the notification, and let the phone leave Barelink running. After that, copying a link rewrites the clipboard by itself. Plain text is ignored. Android only lets the keyboard, or the app on screen, read the clipboard, so Barelink pops a one-pixel window for a split second instead of replacing your keyboard.
 
 **Quick Settings**  
 Edit your tiles and add **Strip link**. One tap cleans whatever is copied.

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -21,9 +23,12 @@ class CleanActivity : AppCompatActivity() {
     private val giveUp = Runnable {
         if (done) return@Runnable
         done = true
-        toast("Could not read the clipboard.")
+        if (!quiet) toast("Could not read the clipboard.")
         finishQuiet()
     }
+
+    private val quiet: Boolean
+        get() = intent?.getBooleanExtra(EXTRA_QUIET, false) == true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +45,14 @@ class CleanActivity : AppCompatActivity() {
                 return
             }
         }
-        handler.postDelayed(giveUp, 900)
+        shrinkWindow()
+        handler.postDelayed(giveUp, 1600)
+    }
+
+    private fun shrinkWindow() {
+        window.setLayout(1, 1)
+        window.setGravity(Gravity.TOP or Gravity.START)
+        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -58,7 +70,7 @@ class CleanActivity : AppCompatActivity() {
         if (cleaned != text) {
             writeClipboard(this, cleaned)
             toast("Link shortened")
-        } else {
+        } else if (!quiet) {
             toast("No link junk to cut")
         }
         finishQuiet()
@@ -128,10 +140,12 @@ class CleanActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         handler.removeCallbacks(giveUp)
+        if (intent?.action == ACTION_CLEAN) Gate.cleaning = false
         super.onDestroy()
     }
 
     companion object {
         const val ACTION_CLEAN = "com.kscooby.barelink.CLEAN"
+        const val EXTRA_QUIET = "quiet"
     }
 }

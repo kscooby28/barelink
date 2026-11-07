@@ -15,6 +15,8 @@ import com.google.android.material.materialswitch.MaterialSwitch
 
 class MainActivity : AppCompatActivity() {
     private var ready = false
+    private var askedOverlay = false
+    private var askedNotif = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +55,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.btn_overlay).setOnClickListener {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName"),
-            )
-            startActivity(intent)
+            openOverlaySettings()
         }
 
         findViewById<MaterialButton>(R.id.btn_notifications).setOnClickListener {
@@ -109,8 +107,43 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.overlay_needed)
         }
         ready = true
-        if (Prefs.auto(this) && Settings.canDrawOverlays(this)) {
+        val overlayOk = Settings.canDrawOverlays(this)
+        findViewById<TextView>(R.id.watch_status).setText(
+            if (overlayOk && Prefs.auto(this)) R.string.watching else R.string.not_watching,
+        )
+        if (!overlayOk) {
+            if (!askedOverlay) {
+                askedOverlay = true
+                openOverlaySettings()
+            }
+            return
+        }
+        if (Prefs.auto(this)) {
             WatchService.start(this)
         }
+        if (Build.VERSION.SDK_INT >= 33 && !askedNotif) {
+            askedNotif = true
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
+            return
+        }
+        val pm = getSystemService(PowerManager::class.java)
+        if (Prefs.auto(this) && !pm.isIgnoringBatteryOptimizations(packageName) && !Prefs.askedBattery(this)) {
+            Prefs.setAskedBattery(this)
+            startActivity(
+                Intent(
+                    Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                    Uri.parse("package:$packageName"),
+                ),
+            )
+        }
+    }
+
+    private fun openOverlaySettings() {
+        startActivity(
+            Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName"),
+            ),
+        )
     }
 }

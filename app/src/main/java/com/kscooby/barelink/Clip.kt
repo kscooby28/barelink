@@ -11,6 +11,9 @@ object Gate {
     @Volatile
     var suppressUntil: Long = 0L
 
+    @Volatile
+    var cleaning: Boolean = false
+
     const val LABEL = "barelink"
 }
 

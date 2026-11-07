@@ -27,8 +27,11 @@ class WatchService : Service() {
         if (now < Gate.suppressUntil) return@OnPrimaryClipChangedListener
         if (now < nextAllowed) return@OnPrimaryClipChangedListener
         nextAllowed = now + 700
+        if (Gate.cleaning) return@OnPrimaryClipChangedListener
+        Gate.cleaning = true
         val open = Intent(this, CleanActivity::class.java).apply {
             action = CleanActivity.ACTION_CLEAN
+            putExtra(CleanActivity.EXTRA_QUIET, true)
             addFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK or
                     Intent.FLAG_ACTIVITY_NO_ANIMATION or
@@ -38,7 +41,7 @@ class WatchService : Service() {
         try {
             startActivity(open)
         } catch (_: Exception) {
-            // Overlay permission missing, or the OEM blocked the background start.
+            Gate.cleaning = false
         }
     }
 
